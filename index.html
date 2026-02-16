@@ -43,7 +43,7 @@
       <!-- Dynamic payment inputs -->
       <div id="payments-container" class="space-y-4"></div>
 
-      <!-- Quick copy buttons when no input -->
+      <!-- Quick buttons when no input -->
       <div id="quick-buttons-noinput" class="hidden flex flex-wrap gap-3 justify-center">
         <button class="quick-copy px-4 py-2 bg-blue-100 text-blue-800 rounded-lg font-semibold flex items-center gap-2 hover:bg-blue-200 transition">
           Davis, Exam <i data-lucide="copy" class="h-4 w-4"></i>
@@ -67,14 +67,14 @@
         <p class="text-sm text-gray-600 mb-2">
           Total Paid: <span id="total-paid" class="font-bold text-gray-900">$0.00</span>
         </p>
-        <div id="result-box" class="text-3xl font-bold py-4 rounded-lg"></div>
-        <button id="btn-copy-result" class="mt-3 px-6 py-3 border border-gray-300 rounded-lg font-bold flex items-center gap-2 mx-auto hover:bg-gray-50 transition">
+        <div id="result-box" class="text-3xl font-bold py-5 rounded-lg"></div>
+        <button id="btn-copy-result" class="mt-4 px-6 py-3 border border-gray-300 rounded-lg font-bold flex items-center gap-2 mx-auto hover:bg-gray-50 transition">
           <span id="result-value"></span>
           <i data-lucide="copy" class="h-5 w-5"></i>
         </button>
       </div>
 
-      <!-- More quick copy buttons -->
+      <!-- More fixed quick-copy buttons -->
       <div class="mt-10 grid grid-cols-2 gap-3 text-sm">
         <button class="quick-copy col-span-2 sm:col-span-1 px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
           Keeping payment for <i data-lucide="copy" class="h-4 w-4"></i>
@@ -136,9 +136,7 @@
       };
 
       wrapper.appendChild(input);
-      if (paymentInputs.length >= 1) {
-        wrapper.appendChild(removeBtn);
-      }
+      if (paymentInputs.length >= 1) wrapper.appendChild(removeBtn);
 
       container.appendChild(wrapper);
       paymentInputs.push(input);
@@ -161,9 +159,7 @@
 
     function getValues() {
       const initial = parseFloat(initialInput.value) || 0;
-      const payments = paymentInputs
-        .map(el => parseFloat(el.value) || 0)
-        .filter(v => !isNaN(v));
+      const payments = paymentInputs.map(el => parseFloat(el.value) || 0);
       const total = payments.reduce((a, b) => a + b, 0);
       return { initial, total };
     }
@@ -173,56 +169,118 @@
 
       totalPaidEl.textContent = `$${total.toFixed(2)}`;
 
+      // Clean up previous vision buttons
+      document.querySelectorAll('#vision-helper').forEach(el => el.remove());
+
       if (initial <= 0 || (initial === 0 && total === 0)) {
         resultArea.classList.add('hidden');
         noInputButtons.classList.remove('hidden');
-      } else {
-        noInputButtons.classList.add('hidden');
-        resultArea.classList.remove('hidden');
+        return;
+      }
 
-        let message, color, value;
+      noInputButtons.classList.add('hidden');
+      resultArea.classList.remove('hidden');
 
-        if (total < initial) {
-          const diff = initial - total;
-          if (diff <= 9.99) {
-            message = 'OK';
-            color = 'text-green-600 bg-green-50';
-            value = '0.00';
-          } else {
-            message = 'Bill to Patient';
-            color = 'text-green-600 bg-green-50';
-            value = diff.toFixed(2);
-          }
-        } else if (total > initial) {
-          message = 'Refund';
-          color = 'text-red-600 bg-red-50';
-          value = (total - initial).toFixed(2);
-        } else {
+      let message, colorClass, valueText;
+
+      if (total < initial) {
+        const diff = initial - total;
+        if (diff <= 9.99) {
           message = 'OK';
-          color = 'text-green-600 bg-green-50';
-          value = '0.00';
-        }
-
-        resultBox.className = `text-3xl font-bold py-5 ${color} rounded-lg`;
-        resultBox.textContent = message;
-
-        if (message === 'OK') {
-          resultValueEl.textContent = `$${total.toFixed(2)}`;
-        } else if (message === 'Refund') {
-          resultValueEl.textContent = `-$${value}`;
+          colorClass = 'text-green-600 bg-green-50';
+          valueText = `$${total.toFixed(2)}`;
         } else {
-          resultValueEl.textContent = `$${value}`;
+          message = 'Bill to Patient';
+          colorClass = 'text-green-600 bg-green-50';
+          valueText = `$${diff.toFixed(2)}`;
         }
+      } else if (total > initial) {
+        message = 'Refund';
+        colorClass = 'text-red-600 bg-red-50';
+        const diff = total - initial;
+        valueText = `-$${diff.toFixed(2)}`;
+      } else {
+        message = 'OK';
+        colorClass = 'text-green-600 bg-green-50';
+        valueText = `$${total.toFixed(2)}`;
+      }
+
+      resultBox.className = `text-3xl font-bold py-5 ${colorClass} rounded-lg`;
+      resultBox.textContent = message;
+      resultValueEl.textContent = valueText;
+
+      // Vision-plan buttons — only when Bill to Patient or Refund
+      if (message === 'Bill to Patient' || message === 'Refund') {
+        const isBill = message === 'Bill to Patient';
+
+        const helperDiv = document.createElement('div');
+        helperDiv.id = 'vision-helper';
+        helperDiv.className = 'mt-8 space-y-4';
+
+        const categories = [
+          {
+            name: 'Exam',
+            bill: 'patient is responsible for remaining exam copay received on date of service XXXX',
+            refund: 'patient was overcharged for the exam received on XXXX'
+          },
+          {
+            name: 'Lens',
+            bill: 'after lens allowance and/or discount was applied, the patient is responsible for the remaining balance',
+            refund: 'after lens allowance and/or discount was applied, the patient overpaid for lens'
+          },
+          {
+            name: 'Frame',
+            bill: 'after frame allowance and/or discount was applied, the patient is responsible for the remaining balance',
+            refund: 'after frame allowance and/or discount was applied, the patient overpaid for frame'
+          },
+          {
+            name: 'CLE',
+            bill: 'after applying the patient allowance and/or discount for the contact lenses fitting, the patient is responsible for the remaining balance of fit received on date of service XXXX',
+            refund: 'after applying the patient allowance and/or discount for the contact lenses fitting, the patient overpaid for services received on date of service XXXX'
+          },
+          {
+            name: 'CL',
+            bill: 'after applying the patient allowance and/or discount for the contact lenses, the patient is responsible for the remaining balance',
+            refund: 'after applying the patient allowance and/or discount for the contact lenses, patient overpaid for lens'
+          }
+        ];
+
+        categories.forEach(cat => {
+          const phrase = isBill ? cat.bill : cat.refund;
+          const bgClass = isBill ? 'bg-blue-50 hover:bg-blue-100 text-blue-800' : 'bg-red-50 hover:bg-red-100 text-red-800';
+
+          const row = document.createElement('div');
+          row.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+
+          ['Davis Vision', 'Superior Vision'].forEach((company, i) => {
+            const btn = document.createElement('button');
+            btn.className = `quick-copy px-4 py-3 rounded-lg font-medium flex items-center justify-between gap-3 border ${bgClass} transition`;
+            btn.innerHTML = `
+              <span>Per ${company}, ${phrase}</span>
+              <i data-lucide="copy" class="h-4 w-4 flex-shrink-0"></i>
+            `;
+            row.appendChild(btn);
+          });
+
+          helperDiv.appendChild(row);
+        });
+
+        resultArea.appendChild(helperDiv);
+        lucide.createIcons();
+
+        // Attach copy behavior
+        helperDiv.querySelectorAll('.quick-copy').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const text = btn.querySelector('span').textContent.trim();
+            navigator.clipboard.writeText(text).catch(err => console.error('Copy failed', err));
+          });
+        });
       }
     }
 
-    function copy(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        // optional: show toast / visual feedback
-      });
-    }
-
-    // Events
+    // ───────────────────────────────────────────────
+    // Event listeners
+    // ───────────────────────────────────────────────
     initialInput.addEventListener('input', update);
     initialInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
@@ -232,9 +290,9 @@
       }
     });
 
-    copyResultBtn.onclick = () => {
-      const text = resultValueEl.textContent;
-      copy(text);
+    document.getElementById('btn-copy-result').onclick = () => {
+      const text = document.getElementById('result-value').textContent.replace(/[$\-]/g, '').trim();
+      navigator.clipboard.writeText(text);
     };
 
     document.getElementById('btn-clear').onclick = () => {
@@ -246,19 +304,19 @@
     };
 
     document.getElementById('btn-not-in-eob').onclick = () =>
-      copy("Not in EOB");
+      navigator.clipboard.writeText("Not in EOB");
 
-    // Quick copies (you can expand this list)
-    document.querySelectorAll('.quick-copy').forEach(btn => {
+    document.querySelectorAll('.quick-copy:not(#vision-helper .quick-copy)').forEach(btn => {
       btn.onclick = () => {
-        const text = btn.textContent.trim().replace(/ copy$/, '').trim();
-        copy(text);
+        const text = btn.textContent.trim().replace(/ copy.*$/i, '').trim();
+        navigator.clipboard.writeText(text);
       };
     });
 
-    // Start with one payment field
+    // Start
     createPaymentField();
     initialInput.focus();
+    update();
   </script>
 
 </body>
