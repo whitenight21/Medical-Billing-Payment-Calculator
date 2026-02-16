@@ -1,4 +1,4 @@
-# Payment Balance Calculator
+# Medical Billing - Payment Calculator
 
 A simple, offline-friendly web tool designed for vision/medical billing staff (especially Davis Vision & Superior Vision claims) to quickly calculate patient responsibility vs. payments received and determine next steps (OK, Bill to Patient, or Refund).
 
@@ -23,7 +23,6 @@ https://github.com/whitenight21/payment-balance-calculator
 
 You can try it live here:  
 → https://whitenight21.github.io/payment-balance-calculator/  
-*(enable GitHub Pages in repo settings after pushing)*
 
 or just download `index.html` and open it in any browser.
 
@@ -37,7 +36,7 @@ or just download `index.html` and open it in any browser.
    - **Bill to Patient** → green + amount to bill
    - **Refund** → red + negative amount
 5. Click the big result button to copy the dollar amount (with `-` sign for refunds)
-6. Use the blue/yellow buttons to copy full boilerplate notes for claims/EOP comments
+6. Use the blue/yellow buttons to copy full notes for claims/EFT comments
 
 ## Customization
 
