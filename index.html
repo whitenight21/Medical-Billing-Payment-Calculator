@@ -102,6 +102,65 @@
   <script>
     lucide.createIcons();
 
+    // ───────────────────────────────────────────────
+    //  EDIT ALL TEXT HERE – this is the only place you usually need to change
+    // ───────────────────────────────────────────────
+    const TEXTS = {
+      // When nothing is entered yet
+      noInputButtons: {
+        davisExam:  "Per Davis Vision, patient is responsible for remaining exam copay received on date of service XXXX",
+        superiorExam: "Per Superior Vision, patient is responsible for remaining exam copay received on date of service XXXX"
+      },
+
+      // Fixed quick buttons at the bottom
+      fixedButtons: {
+        notInEob:       "Not in EOB",
+        keepingPayment: "Keeping payment for claim",
+        paymentPosted:  "Payment posted in claim",
+        returned:       "Returned, no new order in POS, retraction required",
+        remake:         "Payment sent for remake, retraction required",
+        co11:           "CO-11 DX CODE IS INCONSISTENT WITH THE CPT CODE",
+        reversal:       "Reversal payment"
+      },
+
+      // Categories shown when Bill to Patient or Refund
+      categories: [
+        {
+          label: "Exam",
+          bill:   "patient is responsible for remaining exam copay received on date of service XXXX",
+          refund: "patient was overcharged for the exam received on XXXX"
+        },
+        {
+          label: "Lens",
+          bill:   "after lens allowance and/or discount was applied, the patient is responsible for the remaining balance",
+          refund: "after lens allowance and/or discount was applied, the patient overpaid for lens"
+        },
+        {
+          label: "Frame",
+          bill:   "after frame allowance and/or discount was applied, the patient is responsible for the remaining balance",
+          refund: "after frame allowance and/or discount was applied, the patient overpaid for frame"
+        },
+        {
+          label: "CLE",
+          bill:   "after applying the patient allowance and/or discount for the contact lenses fitting, the patient is responsible for the remaining balance of fit received on date of service XXXX",
+          refund: "after applying the patient allowance and/or discount for the contact lenses fitting, the patient overpaid for services received on date of service XXXX"
+        },
+        {
+          label: "CL",
+          bill:   "after applying the patient allowance and/or discount for the contact lenses, the patient is responsible for the remaining balance",
+          refund: "after applying the patient allowance and/or discount for the contact lenses, patient overpaid for lens"
+        }
+      ],
+
+      // Result messages
+      result: {
+        ok:     "OK",
+        bill:   "Bill to Patient",
+        refund: "Refund"
+      }
+    };
+    // ───────────────────────────────────────────────
+
     const initialInput   = document.getElementById('initial-amount');
     const container      = document.getElementById('payments-container');
     const resultArea     = document.getElementById('result-area');
@@ -169,7 +228,6 @@
 
       totalPaidEl.textContent = `$${total.toFixed(2)}`;
 
-      // Clean up previous vision buttons
       document.querySelectorAll('#vision-helper').forEach(el => el.remove());
 
       if (initial <= 0 || (initial === 0 && total === 0)) {
@@ -186,21 +244,21 @@
       if (total < initial) {
         const diff = initial - total;
         if (diff <= 9.99) {
-          message = 'OK';
+          message = TEXTS.result.ok;
           colorClass = 'text-green-600 bg-green-50';
           valueText = `$${total.toFixed(2)}`;
         } else {
-          message = 'Bill to Patient';
+          message = TEXTS.result.bill;
           colorClass = 'text-green-600 bg-green-50';
           valueText = `$${diff.toFixed(2)}`;
         }
       } else if (total > initial) {
-        message = 'Refund';
+        message = TEXTS.result.refund;
         colorClass = 'text-red-600 bg-red-50';
         const diff = total - initial;
         valueText = `-$${diff.toFixed(2)}`;
       } else {
-        message = 'OK';
+        message = TEXTS.result.ok;
         colorClass = 'text-green-600 bg-green-50';
         valueText = `$${total.toFixed(2)}`;
       }
@@ -209,50 +267,24 @@
       resultBox.textContent = message;
       resultValueEl.textContent = valueText;
 
-      // Vision-plan buttons — only when Bill to Patient or Refund
-      if (message === 'Bill to Patient' || message === 'Refund') {
-        const isBill = message === 'Bill to Patient';
+      // Vision-plan helper buttons
+      if (message === TEXTS.result.bill || message === TEXTS.result.refund) {
+        const isBill = message === TEXTS.result.bill;
 
         const helperDiv = document.createElement('div');
         helperDiv.id = 'vision-helper';
         helperDiv.className = 'mt-8 space-y-4';
 
-        const categories = [
-          {
-            name: 'Exam',
-            bill: 'patient is responsible for remaining exam copay received on date of service XXXX',
-            refund: 'patient was overcharged for the exam received on XXXX'
-          },
-          {
-            name: 'Lens',
-            bill: 'after lens allowance and/or discount was applied, the patient is responsible for the remaining balance',
-            refund: 'after lens allowance and/or discount was applied, the patient overpaid for lens'
-          },
-          {
-            name: 'Frame',
-            bill: 'after frame allowance and/or discount was applied, the patient is responsible for the remaining balance',
-            refund: 'after frame allowance and/or discount was applied, the patient overpaid for frame'
-          },
-          {
-            name: 'CLE',
-            bill: 'after applying the patient allowance and/or discount for the contact lenses fitting, the patient is responsible for the remaining balance of fit received on date of service XXXX',
-            refund: 'after applying the patient allowance and/or discount for the contact lenses fitting, the patient overpaid for services received on date of service XXXX'
-          },
-          {
-            name: 'CL',
-            bill: 'after applying the patient allowance and/or discount for the contact lenses, the patient is responsible for the remaining balance',
-            refund: 'after applying the patient allowance and/or discount for the contact lenses, patient overpaid for lens'
-          }
-        ];
-
-        categories.forEach(cat => {
+        TEXTS.categories.forEach(cat => {
           const phrase = isBill ? cat.bill : cat.refund;
-          const bgClass = isBill ? 'bg-blue-50 hover:bg-blue-100 text-blue-800' : 'bg-red-50 hover:bg-red-100 text-red-800';
+          const bgClass = isBill
+            ? 'bg-blue-50 hover:bg-blue-100 text-blue-800 border-blue-200'
+            : 'bg-red-50 hover:bg-red-100 text-red-800 border-red-200';
 
           const row = document.createElement('div');
           row.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
 
-          ['Davis Vision', 'Superior Vision'].forEach((company, i) => {
+          ['Davis Vision', 'Superior Vision'].forEach(company => {
             const btn = document.createElement('button');
             btn.className = `quick-copy px-4 py-3 rounded-lg font-medium flex items-center justify-between gap-3 border ${bgClass} transition`;
             btn.innerHTML = `
@@ -268,19 +300,16 @@
         resultArea.appendChild(helperDiv);
         lucide.createIcons();
 
-        // Attach copy behavior
         helperDiv.querySelectorAll('.quick-copy').forEach(btn => {
           btn.addEventListener('click', () => {
             const text = btn.querySelector('span').textContent.trim();
-            navigator.clipboard.writeText(text).catch(err => console.error('Copy failed', err));
+            navigator.clipboard.writeText(text).catch(console.error);
           });
         });
       }
     }
 
-    // ───────────────────────────────────────────────
     // Event listeners
-    // ───────────────────────────────────────────────
     initialInput.addEventListener('input', update);
     initialInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
@@ -304,16 +333,24 @@
     };
 
     document.getElementById('btn-not-in-eob').onclick = () =>
-      navigator.clipboard.writeText("Not in EOB");
+      navigator.clipboard.writeText(TEXTS.fixedButtons.notInEob);
 
+    // Fixed quick-copy buttons
     document.querySelectorAll('.quick-copy:not(#vision-helper .quick-copy)').forEach(btn => {
       btn.onclick = () => {
-        const text = btn.textContent.trim().replace(/ copy.*$/i, '').trim();
+        let text = btn.textContent.trim().replace(/ copy.*$/i, '').trim();
+        // map to the TEXTS object if needed (optional safety)
+        if (text.includes("Keeping")) text = TEXTS.fixedButtons.keepingPayment;
+        if (text.includes("Payment posted")) text = TEXTS.fixedButtons.paymentPosted;
+        if (text.includes("Returned")) text = TEXTS.fixedButtons.returned;
+        if (text.includes("ReMake")) text = TEXTS.fixedButtons.remake;
+        if (text.includes("CO-11")) text = TEXTS.fixedButtons.co11;
+        if (text.includes("Reversal")) text = TEXTS.fixedButtons.reversal;
         navigator.clipboard.writeText(text);
       };
     });
 
-    // Start
+    // Initialize
     createPaymentField();
     initialInput.focus();
     update();
