@@ -106,7 +106,7 @@
       },
 
       fixed: {
-        notInEob:  { label: "Not in EOB",     text: "Not in EOB" },
+        notInEob:  { label: "Not in EOB",     text: "Not in EOB" },  // ← fixed: now copies short text
         keeping:   { label: "Keeping payment",text: "Keeping payment for claim" },
         posted:    { label: "Payment posted", text: "Payment posted in claim" },
         returned:  { label: "Returned ret.",  text: "Returned, no new order in POS, retraction required" },
@@ -233,7 +233,7 @@
         colorClass = 'text-red-600 bg-red-50';
         const diff = total - initial;
         valueText = `-$${diff.toFixed(2)}`;
-        copyValue = `-${diff.toFixed(2)}`;   // ← now keeps the minus sign
+        copyValue = `-${diff.toFixed(2)}`;
       } else {
         message = TEXTS.result.ok;
         colorClass = 'text-green-600 bg-green-50';
@@ -253,18 +253,16 @@
         helperDiv.id = 'vision-helper';
         helperDiv.className = 'mt-8 space-y-4';
 
-        // Group by category so Davis is left, Superior right
         for (let i = 0; i < TEXTS.categories.length; i += 2) {
           const catDavis   = TEXTS.categories[i];
           const catSuperior = TEXTS.categories[i + 1] || catDavis;
 
-          const phraseDavis   = isBill ? catDavis.davis   : catDavis.davis;   // both cases use .davis for Davis
+          const phraseDavis   = isBill ? catDavis.davis   : catDavis.davis;
           const phraseSuperior = isBill ? catSuperior.superior : catSuperior.superior;
 
           const row = document.createElement('div');
           row.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
 
-          // Davis – left / blue
           const btnDavis = document.createElement('button');
           btnDavis.className = 'quick-copy px-4 py-3 rounded-lg font-medium border bg-blue-50 hover:bg-blue-100 text-blue-800 border-blue-200 transition flex items-center justify-between gap-2';
           btnDavis.dataset.copyText = phraseDavis;
@@ -274,7 +272,6 @@
           `;
           row.appendChild(btnDavis);
 
-          // Superior – right / yellow
           const btnSuperior = document.createElement('button');
           btnSuperior.className = 'quick-copy px-4 py-3 rounded-lg font-medium border bg-yellow-50 hover:bg-yellow-100 text-yellow-800 border-yellow-200 transition flex items-center justify-between gap-2';
           btnSuperior.dataset.copyText = phraseSuperior;
@@ -292,8 +289,7 @@
 
         helperDiv.querySelectorAll('.quick-copy').forEach(btn => {
           btn.addEventListener('click', () => {
-            const fullText = btn.dataset.copyText;
-            navigator.clipboard.writeText(fullText).catch(console.error);
+            navigator.clipboard.writeText(btn.dataset.copyText).catch(console.error);
           });
         });
       }
@@ -311,7 +307,7 @@
 
     document.getElementById('btn-copy-result').onclick = () => {
       const raw = document.getElementById('result-value').textContent;
-      const cleaned = raw.replace(/^\$/, '');  // remove leading $ but KEEP - for refunds
+      const cleaned = raw.replace(/^\$/, '');  // keep - sign for refunds
       navigator.clipboard.writeText(cleaned);
     };
 
@@ -323,21 +319,24 @@
       initialInput.focus();
     };
 
-    document.getElementById('btn-not-in-eob').onclick = () =>
-      navigator.clipboard.writeText(TEXTS.noInput.davisExam);
+    document.getElementById('btn-not-in-eob').onclick = () => {
+      navigator.clipboard.writeText(TEXTS.fixed.notInEob.text);
+    };
 
     document.querySelectorAll('.quick-copy:not(#vision-helper .quick-copy)').forEach(btn => {
       btn.addEventListener('click', () => {
-        const text = btn.textContent.trim().replace(/ copy.*$/i, '').trim();
-        let fullText = text;
+        const visibleText = btn.textContent.trim().replace(/ copy.*$/i, '').trim();
+        let fullText = visibleText;
+
         Object.values(TEXTS.fixed).forEach(item => {
-          if (item.label === text) fullText = item.text;
+          if (item.label === visibleText) fullText = item.text;
         });
+
         navigator.clipboard.writeText(fullText);
       });
     });
 
-    // Start
+    // Initialize
     createPaymentField();
     initialInput.focus();
     update();
