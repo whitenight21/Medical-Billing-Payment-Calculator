@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment Balance Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-lg bg-white shadow-xl rounded-xl p-6">
+
+    <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">
+      Payment Balance Calculator
+    </h1>
+
+    <div class="space-y-5">
+
+      <!-- Patient Responsibility -->
+      <div>
+        <input
+          id="initial-amount"
+          type="number"
+          step="any"
+          placeholder="Patient Responsibility"
+          class="w-full p-4 text-xl font-bold border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+      </div>
+
+      <div class="border-b border-gray-300 my-6"></div>
+
+      <!-- Dynamic payment inputs -->
+      <div id="payments-container" class="space-y-4"></div>
+
+      <!-- Quick copy buttons when no input -->
+      <div id="quick-buttons-noinput" class="hidden flex flex-wrap gap-3 justify-center">
+        <button class="quick-copy px-4 py-2 bg-blue-100 text-blue-800 rounded-lg font-semibold flex items-center gap-2 hover:bg-blue-200 transition">
+          Davis, Exam <i data-lucide="copy" class="h-4 w-4"></i>
+        </button>
+        <button class="quick-copy px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg font-semibold flex items-center gap-2 hover:bg-yellow-200 transition">
+          Superior, Exam <i data-lucide="copy" class="h-4 w-4"></i>
+        </button>
+      </div>
+
+      <div class="flex flex-wrap gap-3 justify-center mt-6">
+        <button id="btn-not-in-eob" class="px-5 py-2.5 bg-green-100 text-green-800 rounded-lg font-semibold flex items-center gap-2 hover:bg-green-200 transition">
+          Not in EOB <i data-lucide="copy" class="h-4 w-4"></i>
+        </button>
+        <button id="btn-clear" class="px-6 py-2.5 bg-red-50 text-red-600 font-bold rounded-lg hover:bg-red-100 transition">
+          CLEAR
+        </button>
+      </div>
+
+      <!-- Result area -->
+      <div id="result-area" class="hidden mt-8 text-center">
+        <p class="text-sm text-gray-600 mb-2">
+          Total Paid: <span id="total-paid" class="font-bold text-gray-900">$0.00</span>
+        </p>
+        <div id="result-box" class="text-3xl font-bold py-4 rounded-lg"></div>
+        <button id="btn-copy-result" class="mt-3 px-6 py-3 border border-gray-300 rounded-lg font-bold flex items-center gap-2 mx-auto hover:bg-gray-50 transition">
+          <span id="result-value"></span>
+          <i data-lucide="copy" class="h-5 w-5"></i>
+        </button>
+      </div>
+
+      <!-- More quick copy buttons -->
+      <div class="mt-10 grid grid-cols-2 gap-3 text-sm">
+        <button class="quick-copy col-span-2 sm:col-span-1 px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
+          Keeping payment for <i data-lucide="copy" class="h-4 w-4"></i>
+        </button>
+        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
+          Payment posted in <i data-lucide="copy" class="h-4 w-4"></i>
+        </button>
+        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
+          Returned, retraction <i data-lucide="copy" class="h-4 w-4"></i>
+        </button>
+        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
+          ReMake, retraction <i data-lucide="copy" class="h-4 w-4"></i>
+        </button>
+        <button class="quick-copy col-span-2 sm:col-span-1 px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
+          CO-11 <i data-lucide="copy" class="h-4 w-4"></i>
+        </button>
+        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
+          Reversal <i data-lucide="copy" class="h-4 w-4"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const initialInput   = document.getElementById('initial-amount');
+    const container      = document.getElementById('payments-container');
+    const resultArea     = document.getElementById('result-area');
+    const totalPaidEl    = document.getElementById('total-paid');
+    const resultBox      = document.getElementById('result-box');
+    const resultValueEl  = document.getElementById('result-value');
+    const copyResultBtn  = document.getElementById('btn-copy-result');
+    const noInputButtons = document.getElementById('quick-buttons-noinput');
+
+    let paymentInputs = [];
+    let nextId = 1;
+
+    function createPaymentField() {
+      const id = nextId++;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flex items-center gap-3';
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.step = 'any';
+      input.placeholder = `Payment ${id}`;
+      input.className = 'flex-1 p-3.5 text-lg font-semibold border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
+      input.dataset.id = id;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = 'Remove';
+      removeBtn.className = 'px-3 py-2 text-sm font-medium text-red-600 border border-red-300 rounded hover:bg-red-50 transition';
+      removeBtn.onclick = () => {
+        wrapper.remove();
+        paymentInputs = paymentInputs.filter(el => el !== input);
+        update();
+      };
+
+      wrapper.appendChild(input);
+      if (paymentInputs.length >= 1) {
+        wrapper.appendChild(removeBtn);
+      }
+
+      container.appendChild(wrapper);
+      paymentInputs.push(input);
+
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const idx = paymentInputs.indexOf(input);
+          if (idx === paymentInputs.length - 1) {
+            createPaymentField();
+            setTimeout(() => paymentInputs[paymentInputs.length-1].focus(), 10);
+          } else {
+            paymentInputs[idx + 1]?.focus();
+          }
+        }
+      });
+
+      input.addEventListener('input', update);
+    }
+
+    function getValues() {
+      const initial = parseFloat(initialInput.value) || 0;
+      const payments = paymentInputs
+        .map(el => parseFloat(el.value) || 0)
+        .filter(v => !isNaN(v));
+      const total = payments.reduce((a, b) => a + b, 0);
+      return { initial, total };
+    }
+
+    function update() {
+      const { initial, total } = getValues();
+
+      totalPaidEl.textContent = `$${total.toFixed(2)}`;
+
+      if (initial <= 0 || (initial === 0 && total === 0)) {
+        resultArea.classList.add('hidden');
+        noInputButtons.classList.remove('hidden');
+      } else {
+        noInputButtons.classList.add('hidden');
+        resultArea.classList.remove('hidden');
+
+        let message, color, value;
+
+        if (total < initial) {
+          const diff = initial - total;
+          if (diff <= 9.99) {
+            message = 'OK';
+            color = 'text-green-600 bg-green-50';
+            value = '0.00';
+          } else {
+            message = 'Bill to Patient';
+            color = 'text-green-600 bg-green-50';
+            value = diff.toFixed(2);
+          }
+        } else if (total > initial) {
+          message = 'Refund';
+          color = 'text-red-600 bg-red-50';
+          value = (total - initial).toFixed(2);
+        } else {
+          message = 'OK';
+          color = 'text-green-600 bg-green-50';
+          value = '0.00';
+        }
+
+        resultBox.className = `text-3xl font-bold py-5 ${color} rounded-lg`;
+        resultBox.textContent = message;
+
+        if (message === 'OK') {
+          resultValueEl.textContent = `$${total.toFixed(2)}`;
+        } else if (message === 'Refund') {
+          resultValueEl.textContent = `-$${value}`;
+        } else {
+          resultValueEl.textContent = `$${value}`;
+        }
+      }
+    }
+
+    function copy(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        // optional: show toast / visual feedback
+      });
+    }
+
+    // Events
+    initialInput.addEventListener('input', update);
+    initialInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (paymentInputs.length === 0) createPaymentField();
+        paymentInputs[0]?.focus();
+      }
+    });
+
+    copyResultBtn.onclick = () => {
+      const text = resultValueEl.textContent;
+      copy(text);
+    };
+
+    document.getElementById('btn-clear').onclick = () => {
+      initialInput.value = '';
+      container.innerHTML = '';
+      paymentInputs = [];
+      update();
+      initialInput.focus();
+    };
+
+    document.getElementById('btn-not-in-eob').onclick = () =>
+      copy("Not in EOB");
+
+    // Quick copies (you can expand this list)
+    document.querySelectorAll('.quick-copy').forEach(btn => {
+      btn.onclick = () => {
+        const text = btn.textContent.trim().replace(/ copy$/, '').trim();
+        copy(text);
+      };
+    });
+
+    // Start with one payment field
+    createPaymentField();
+    initialInput.focus();
+  </script>
+
+</body>
+</html>
