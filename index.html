@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Medical Billing Calculator</title>
+  <title>Payment Balance Calculator</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
@@ -22,76 +22,70 @@
   <div class="w-full max-w-lg bg-white shadow-xl rounded-xl p-6">
 
     <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">
-      Medical Billing Calculator
+      Payment Balance Calculator
     </h1>
 
     <div class="space-y-5">
 
-      <!-- Patient Responsibility -->
-      <div>
-        <input
-          id="initial-amount"
-          type="number"
-          step="any"
-          placeholder="Patient Responsibility"
-          class="w-full p-4 text-xl font-bold border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-        />
-      </div>
+      <input
+        id="initial-amount"
+        type="number"
+        step="any"
+        placeholder="Patient Responsibility"
+        class="w-full p-4 text-xl font-bold border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+      />
 
       <div class="border-b border-gray-300 my-6"></div>
 
-      <!-- Dynamic payment inputs -->
       <div id="payments-container" class="space-y-4"></div>
 
-      <!-- Quick buttons when no input -->
       <div id="quick-buttons-noinput" class="hidden flex flex-wrap gap-3 justify-center">
-        <button class="quick-copy px-4 py-2 bg-blue-100 text-blue-800 rounded-lg font-semibold flex items-center gap-2 hover:bg-blue-200 transition">
-          Davis, Exam <i data-lucide="copy" class="h-4 w-4"></i>
+        <button class="quick-copy px-4 py-2 bg-blue-100 text-blue-800 rounded font-semibold flex items-center gap-2 hover:bg-blue-200">
+          Davis Exam <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
-        <button class="quick-copy px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg font-semibold flex items-center gap-2 hover:bg-yellow-200 transition">
-          Superior, Exam <i data-lucide="copy" class="h-4 w-4"></i>
+        <button class="quick-copy px-4 py-2 bg-yellow-100 text-yellow-800 rounded font-semibold flex items-center gap-2 hover:bg-yellow-200">
+          Superior Exam <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
       </div>
 
       <div class="flex flex-wrap gap-3 justify-center mt-6">
-        <button id="btn-not-in-eob" class="px-5 py-2.5 bg-green-100 text-green-800 rounded-lg font-semibold flex items-center gap-2 hover:bg-green-200 transition">
+        <button id="btn-not-in-eob" class="px-5 py-2.5 bg-green-100 text-green-800 rounded font-semibold flex items-center gap-2 hover:bg-green-200">
           Not in EOB <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
-        <button id="btn-clear" class="px-6 py-2.5 bg-red-50 text-red-600 font-bold rounded-lg hover:bg-red-100 transition">
+        <button id="btn-clear" class="px-6 py-2.5 bg-red-50 text-red-600 font-bold rounded hover:bg-red-100">
           CLEAR
         </button>
       </div>
 
-      <!-- Result area -->
       <div id="result-area" class="hidden mt-8 text-center">
         <p class="text-sm text-gray-600 mb-2">
-          Total Paid: <span id="total-paid" class="font-bold text-gray-900">$0.00</span>
+          Total Paid: <span id="total-paid" class="font-bold">$0.00</span>
         </p>
         <div id="result-box" class="text-3xl font-bold py-5 rounded-lg"></div>
-        <button id="btn-copy-result" class="mt-4 px-6 py-3 border border-gray-300 rounded-lg font-bold flex items-center gap-2 mx-auto hover:bg-gray-50 transition">
+        <button id="btn-copy-result" class="mt-4 px-6 py-3 border border-gray-300 rounded font-bold flex items-center gap-2 mx-auto hover:bg-gray-50">
           <span id="result-value"></span>
           <i data-lucide="copy" class="h-5 w-5"></i>
         </button>
       </div>
 
-      <!-- More fixed quick-copy buttons -->
+      <!-- Fixed quick buttons -->
       <div class="mt-10 grid grid-cols-2 gap-3 text-sm">
-        <button class="quick-copy col-span-2 sm:col-span-1 px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
-          Keeping payment for <i data-lucide="copy" class="h-4 w-4"></i>
+        <button class="quick-copy col-span-2 sm:col-span-1 px-4 py-2.5 bg-gray-100 rounded hover:bg-gray-200 flex items-center justify-center gap-2">
+          Keeping payment <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
-        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
-          Payment posted in <i data-lucide="copy" class="h-4 w-4"></i>
+        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded hover:bg-gray-200 flex items-center justify-center gap-2">
+          Payment posted <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
-        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
-          Returned, retraction <i data-lucide="copy" class="h-4 w-4"></i>
+        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded hover:bg-gray-200 flex items-center justify-center gap-2">
+          Returned ret. <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
-        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
-          ReMake, retraction <i data-lucide="copy" class="h-4 w-4"></i>
+        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded hover:bg-gray-200 flex items-center justify-center gap-2">
+          Remake ret. <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
-        <button class="quick-copy col-span-2 sm:col-span-1 px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
-          Paid twice <i data-lucide="copy" class="h-4 w-4"></i>
+        <button class="quick-copy col-span-2 sm:col-span-1 px-4 py-2.5 bg-gray-100 rounded hover:bg-gray-200 flex items-center justify-center gap-2">
+          CO-11 <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
-        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
+        <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded hover:bg-gray-200 flex items-center justify-center gap-2">
           Reversal <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
       </div>
@@ -103,60 +97,84 @@
     lucide.createIcons();
 
     // ───────────────────────────────────────────────
-    //  EDIT ALL TEXT HERE – this is the only place you usually need to change
+    //  ALL CUSTOMIZABLE TEXT LIVES HERE
     // ───────────────────────────────────────────────
     const TEXTS = {
-      // When nothing is entered yet
-      noInputButtons: {
+      // No-input quick buttons
+      noInput: {
         davisExam:  "Per Davis Vision, patient is responsible for remaining exam copay received on date of service XXXX",
         superiorExam: "Per Superior Vision, patient is responsible for remaining exam copay received on date of service XXXX"
       },
 
-      // Quick buttons at the bottom
-      fixedButtons: {
-        notInEob:       "Not in EOB",
-        keepingPayment: "Keeping payment for claim",
-        paymentPosted:  "Payment posted in claim",
-        returned:       "Returned, no new order in POS, retraction required",
-        remake:         "Payment sent for remake, retraction required",
-        co11:           "Paid twice",
-        reversal:       "Reversal payment"
+      // Fixed bottom buttons – short label → full copied text
+      fixed: {
+        notInEob:       { label: "Not in EOB",          text: "Not in EOB" },
+        keeping:        { label: "Keeping payment",     text: "Keeping payment for claim" },
+        posted:         { label: "Payment posted",      text: "Payment posted in claim" },
+        returned:       { label: "Returned ret.",       text: "Returned, no new order in POS, retraction required" },
+        remake:         { label: "Remake ret.",         text: "Payment sent for remake, retraction required" },
+        co11:           { label: "CO-11",               text: "CO-11 DX CODE IS INCONSISTENT WITH THE CPT CODE" },
+        reversal:       { label: "Reversal",            text: "Reversal payment" }
       },
 
-      // Categories shown when Bill to Patient or Refund
+      // Categories shown on Bill / Refund – short button label → full copied phrase
       categories: [
         {
           label: "Exam",
-          bill:   "patient is responsible for remaining exam copay received on date of service XXXX",
-          refund: "patient was overcharged for the exam received on XXXX"
+          bill:   "Per Davis Vision, patient is responsible for remaining exam copay received on date of service XXXX",
+          refund: "Per Davis Vision, patient was overcharged for the exam received on XXXX"
+        },
+        {
+          label: "Exam",
+          bill:   "Per Superior Vision, patient is responsible for remaining exam copay received on date of service XXXX",
+          refund: "Per Superior Vision, patient was overcharged for the exam received on XXXX"
         },
         {
           label: "Lens",
-          bill:   "after lens allowance and/or discount was applied, the patient is responsible for the remaining balance",
-          refund: "after lens allowance and/or discount was applied, the patient overpaid for lens"
+          bill:   "Per Davis Vision, after lens allowance and/or discount was applied, the patient is responsible for the remaining balance",
+          refund: "Per Davis Vision, after lens allowance and/or discount was applied, the patient overpaid for lens"
+        },
+        {
+          label: "Lens",
+          bill:   "Per Superior Vision, after lens allowance and/or discount was applied, the patient is responsible for the remaining balance",
+          refund: "Per Superior Vision, after lens allowance and/or discount was applied, the patient overpaid for lens"
         },
         {
           label: "Frame",
-          bill:   "after frame allowance and/or discount was applied, the patient is responsible for the remaining balance",
-          refund: "after frame allowance and/or discount was applied, the patient overpaid for frame"
+          bill:   "Per Davis Vision, after frame allowance and/or discount was applied, the patient is responsible for the remaining balance",
+          refund: "Per Davis Vision, after frame allowance and/or discount was applied, the patient overpaid for frame"
+        },
+        {
+          label: "Frame",
+          bill:   "Per Superior Vision, after frame allowance and/or discount was applied, the patient is responsible for the remaining balance",
+          refund: "Per Superior Vision, after frame allowance and/or discount was applied, the patient overpaid for frame"
         },
         {
           label: "CLE",
-          bill:   "after applying the patient allowance and/or discount for the contact lenses fitting, the patient is responsible for the remaining balance of fit received on date of service XXXX",
-          refund: "after applying the patient allowance and/or discount for the contact lenses fitting, the patient overpaid for services received on date of service XXXX"
+          bill:   "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient is responsible for the remaining balance of fit received on date of service XXXX",
+          refund: "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient overpaid for services received on date of service XXXX"
+        },
+        {
+          label: "CLE",
+          bill:   "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient is responsible for the remaining balance of fit received on date of service XXXX",
+          refund: "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient overpaid for services received on date of service XXXX"
         },
         {
           label: "CL",
-          bill:   "after applying the patient allowance and/or discount for the contact lenses, the patient is responsible for the remaining balance",
-          refund: "after applying the patient allowance and/or discount for the contact lenses, patient overpaid for lens"
+          bill:   "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses, the patient is responsible for the remaining balance",
+          refund: "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses, patient overpaid for lens"
+        },
+        {
+          label: "CL",
+          bill:   "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses, the patient is responsible for the remaining balance",
+          refund: "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses, patient overpaid for lens"
         }
       ],
 
-      // Result messages
       result: {
-        ok:     "OK",
-        bill:   "Bill to Patient",
-        refund: "Refund"
+        ok:    "OK",
+        bill:  "Bill to Patient",
+        refund:"Refund"
       }
     };
     // ───────────────────────────────────────────────
@@ -183,11 +201,10 @@
       input.step = 'any';
       input.placeholder = `Payment ${id}`;
       input.className = 'flex-1 p-3.5 text-lg font-semibold border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
-      input.dataset.id = id;
 
       const removeBtn = document.createElement('button');
       removeBtn.textContent = 'Remove';
-      removeBtn.className = 'px-3 py-2 text-sm font-medium text-red-600 border border-red-300 rounded hover:bg-red-50 transition';
+      removeBtn.className = 'px-3 py-2 text-sm font-medium text-red-600 border border-red-300 rounded hover:bg-red-50';
       removeBtn.onclick = () => {
         wrapper.remove();
         paymentInputs = paymentInputs.filter(el => el !== input);
@@ -267,34 +284,27 @@
       resultBox.textContent = message;
       resultValueEl.textContent = valueText;
 
-      // Vision-plan helper buttons
+      // Vision-plan buttons – short labels only
       if (message === TEXTS.result.bill || message === TEXTS.result.refund) {
         const isBill = message === TEXTS.result.bill;
+        const bgClass = isBill
+          ? 'bg-blue-50 hover:bg-blue-100 text-blue-800 border-blue-200'
+          : 'bg-red-50 hover:bg-red-100 text-red-800 border-red-200';
 
         const helperDiv = document.createElement('div');
         helperDiv.id = 'vision-helper';
-        helperDiv.className = 'mt-8 space-y-4';
+        helperDiv.className = 'mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3';
 
-        TEXTS.categories.forEach(cat => {
+        TEXTS.categories.forEach((cat, index) => {
           const phrase = isBill ? cat.bill : cat.refund;
-          const bgClass = isBill
-            ? 'bg-blue-50 hover:bg-blue-100 text-blue-800 border-blue-200'
-            : 'bg-red-50 hover:bg-red-100 text-red-800 border-red-200';
-
-          const row = document.createElement('div');
-          row.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
-
-          ['Davis Vision', 'Superior Vision'].forEach(company => {
-            const btn = document.createElement('button');
-            btn.className = `quick-copy px-4 py-3 rounded-lg font-medium flex items-center justify-between gap-3 border ${bgClass} transition`;
-            btn.innerHTML = `
-              <span>Per ${company}, ${phrase}</span>
-              <i data-lucide="copy" class="h-4 w-4 flex-shrink-0"></i>
-            `;
-            row.appendChild(btn);
-          });
-
-          helperDiv.appendChild(row);
+          const btn = document.createElement('button');
+          btn.className = `quick-copy px-4 py-3 rounded-lg font-medium border ${bgClass} transition flex items-center justify-between gap-2`;
+          btn.dataset.copyText = phrase;
+          btn.innerHTML = `
+            <span>${cat.label}</span>
+            <i data-lucide="copy" class="h-4 w-4 flex-shrink-0"></i>
+          `;
+          helperDiv.appendChild(btn);
         });
 
         resultArea.appendChild(helperDiv);
@@ -302,8 +312,8 @@
 
         helperDiv.querySelectorAll('.quick-copy').forEach(btn => {
           btn.addEventListener('click', () => {
-            const text = btn.querySelector('span').textContent.trim();
-            navigator.clipboard.writeText(text).catch(console.error);
+            const fullText = btn.dataset.copyText;
+            navigator.clipboard.writeText(fullText).catch(console.error);
           });
         });
       }
@@ -333,24 +343,23 @@
     };
 
     document.getElementById('btn-not-in-eob').onclick = () =>
-      navigator.clipboard.writeText(TEXTS.fixedButtons.notInEob);
+      navigator.clipboard.writeText(TEXTS.noInput.davisExam); // or change to whatever you prefer
 
-    // Fixed quick-copy buttons
+    // Fixed buttons – use TEXTS.fixed
     document.querySelectorAll('.quick-copy:not(#vision-helper .quick-copy)').forEach(btn => {
-      btn.onclick = () => {
-        let text = btn.textContent.trim().replace(/ copy.*$/i, '').trim();
-        // map to the TEXTS object if needed (optional safety)
-        if (text.includes("Keeping")) text = TEXTS.fixedButtons.keepingPayment;
-        if (text.includes("Payment posted")) text = TEXTS.fixedButtons.paymentPosted;
-        if (text.includes("Returned")) text = TEXTS.fixedButtons.returned;
-        if (text.includes("ReMake")) text = TEXTS.fixedButtons.remake;
-        if (text.includes("Paid twice")) text = TEXTS.fixedButtons.co11;
-        if (text.includes("Reversal")) text = TEXTS.fixedButtons.reversal;
-        navigator.clipboard.writeText(text);
-      };
+      btn.addEventListener('click', () => {
+        const text = btn.textContent.trim().replace(/ copy.*$/i, '').trim();
+        let fullText = text;
+
+        Object.values(TEXTS.fixed).forEach(item => {
+          if (item.label === text) fullText = item.text;
+        });
+
+        navigator.clipboard.writeText(fullText);
+      });
     });
 
-    // Initialize
+    // Start
     createPaymentField();
     initialInput.focus();
     update();
