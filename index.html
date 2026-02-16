@@ -89,7 +89,7 @@
           ReMake, retraction <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
         <button class="quick-copy col-span-2 sm:col-span-1 px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
-          CO-11 <i data-lucide="copy" class="h-4 w-4"></i>
+          Paid twice <i data-lucide="copy" class="h-4 w-4"></i>
         </button>
         <button class="quick-copy px-4 py-2.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition flex items-center justify-center gap-2">
           Reversal <i data-lucide="copy" class="h-4 w-4"></i>
@@ -119,7 +119,7 @@
         paymentPosted:  "Payment posted in claim",
         returned:       "Returned, no new order in POS, retraction required",
         remake:         "Payment sent for remake, retraction required",
-        co11:           "CO-11 DX CODE IS INCONSISTENT WITH THE CPT CODE",
+        co11:           "Paid tiwce",
         reversal:       "Reversal payment"
       },
 
@@ -344,7 +344,7 @@
         if (text.includes("Payment posted")) text = TEXTS.fixedButtons.paymentPosted;
         if (text.includes("Returned")) text = TEXTS.fixedButtons.returned;
         if (text.includes("ReMake")) text = TEXTS.fixedButtons.remake;
-        if (text.includes("CO-11")) text = TEXTS.fixedButtons.co11;
+        if (text.includes("Paid twice")) text = TEXTS.fixedButtons.co11;
         if (text.includes("Reversal")) text = TEXTS.fixedButtons.reversal;
         navigator.clipboard.writeText(text);
       };
