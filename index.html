@@ -97,78 +97,35 @@
     lucide.createIcons();
 
     // ───────────────────────────────────────────────
-    //  ALL CUSTOMIZABLE TEXT LIVES HERE
+    //  EDIT ALL TEXT HERE
     // ───────────────────────────────────────────────
     const TEXTS = {
-      // No-input quick buttons
       noInput: {
         davisExam:  "Per Davis Vision, patient is responsible for remaining exam copay received on date of service XXXX",
         superiorExam: "Per Superior Vision, patient is responsible for remaining exam copay received on date of service XXXX"
       },
 
-      // Fixed bottom buttons – short label → full copied text
       fixed: {
-        notInEob:       { label: "Not in EOB",          text: "Not in EOB" },
-        keeping:        { label: "Keeping payment",     text: "Keeping payment for claim" },
-        posted:         { label: "Payment posted",      text: "Payment posted in claim" },
-        returned:       { label: "Returned ret.",       text: "Returned, no new order in POS, retraction required" },
-        remake:         { label: "Remake ret.",         text: "Payment sent for remake, retraction required" },
-        co11:           { label: "CO-11",               text: "CO-11 DX CODE IS INCONSISTENT WITH THE CPT CODE" },
-        reversal:       { label: "Reversal",            text: "Reversal payment" }
+        notInEob:  { label: "Not in EOB",     text: "Not in EOB" },
+        keeping:   { label: "Keeping payment",text: "Keeping payment for claim" },
+        posted:    { label: "Payment posted", text: "Payment posted in claim" },
+        returned:  { label: "Returned ret.",  text: "Returned, no new order in POS, retraction required" },
+        remake:    { label: "Remake ret.",    text: "Payment sent for remake, retraction required" },
+        co11:      { label: "CO-11",          text: "CO-11 DX CODE IS INCONSISTENT WITH THE CPT CODE" },
+        reversal:  { label: "Reversal",       text: "Reversal payment" }
       },
 
-      // Categories shown on Bill / Refund – short button label → full copied phrase
       categories: [
-        {
-          label: "Exam",
-          bill:   "Per Davis Vision, patient is responsible for remaining exam copay received on date of service XXXX",
-          refund: "Per Davis Vision, patient was overcharged for the exam received on XXXX"
-        },
-        {
-          label: "Exam",
-          bill:   "Per Superior Vision, patient is responsible for remaining exam copay received on date of service XXXX",
-          refund: "Per Superior Vision, patient was overcharged for the exam received on XXXX"
-        },
-        {
-          label: "Lens",
-          bill:   "Per Davis Vision, after lens allowance and/or discount was applied, the patient is responsible for the remaining balance",
-          refund: "Per Davis Vision, after lens allowance and/or discount was applied, the patient overpaid for lens"
-        },
-        {
-          label: "Lens",
-          bill:   "Per Superior Vision, after lens allowance and/or discount was applied, the patient is responsible for the remaining balance",
-          refund: "Per Superior Vision, after lens allowance and/or discount was applied, the patient overpaid for lens"
-        },
-        {
-          label: "Frame",
-          bill:   "Per Davis Vision, after frame allowance and/or discount was applied, the patient is responsible for the remaining balance",
-          refund: "Per Davis Vision, after frame allowance and/or discount was applied, the patient overpaid for frame"
-        },
-        {
-          label: "Frame",
-          bill:   "Per Superior Vision, after frame allowance and/or discount was applied, the patient is responsible for the remaining balance",
-          refund: "Per Superior Vision, after frame allowance and/or discount was applied, the patient overpaid for frame"
-        },
-        {
-          label: "CLE",
-          bill:   "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient is responsible for the remaining balance of fit received on date of service XXXX",
-          refund: "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient overpaid for services received on date of service XXXX"
-        },
-        {
-          label: "CLE",
-          bill:   "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient is responsible for the remaining balance of fit received on date of service XXXX",
-          refund: "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient overpaid for services received on date of service XXXX"
-        },
-        {
-          label: "CL",
-          bill:   "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses, the patient is responsible for the remaining balance",
-          refund: "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses, patient overpaid for lens"
-        },
-        {
-          label: "CL",
-          bill:   "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses, the patient is responsible for the remaining balance",
-          refund: "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses, patient overpaid for lens"
-        }
+        { label: "Davis Exam",   davis: "Per Davis Vision, patient is responsible for remaining exam copay received on date of service XXXX",   superior: "Per Superior Vision, patient is responsible for remaining exam copay received on date of service XXXX" },
+        { label: "Superior Exam", davis: "Per Davis Vision, patient was overcharged for the exam received on XXXX",                             superior: "Per Superior Vision, patient was overcharged for the exam received on XXXX" },
+        { label: "Davis Lens",   davis: "Per Davis Vision, after lens allowance and/or discount was applied, the patient is responsible for the remaining balance", superior: "Per Superior Vision, after lens allowance and/or discount was applied, the patient is responsible for the remaining balance" },
+        { label: "Superior Lens", davis: "Per Davis Vision, after lens allowance and/or discount was applied, the patient overpaid for lens",     superior: "Per Superior Vision, after lens allowance and/or discount was applied, the patient overpaid for lens" },
+        { label: "Davis Frame",  davis: "Per Davis Vision, after frame allowance and/or discount was applied, the patient is responsible for the remaining balance", superior: "Per Superior Vision, after frame allowance and/or discount was applied, the patient is responsible for the remaining balance" },
+        { label: "Superior Frame", davis: "Per Davis Vision, after frame allowance and/or discount was applied, the patient overpaid for frame",   superior: "Per Superior Vision, after frame allowance and/or discount was applied, the patient overpaid for frame" },
+        { label: "Davis CLE",    davis: "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient is responsible for the remaining balance of fit received on date of service XXXX", superior: "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient is responsible for the remaining balance of fit received on date of service XXXX" },
+        { label: "Superior CLE", davis: "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient overpaid for services received on date of service XXXX", superior: "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses fitting, the patient overpaid for services received on date of service XXXX" },
+        { label: "Davis CL",     davis: "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses, the patient is responsible for the remaining balance", superior: "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses, the patient is responsible for the remaining balance" },
+        { label: "Superior CL",  davis: "Per Davis Vision, after applying the patient allowance and/or discount for the contact lenses, patient overpaid for lens", superior: "Per Superior Vision, after applying the patient allowance and/or discount for the contact lenses, patient overpaid for lens" }
       ],
 
       result: {
@@ -256,7 +213,7 @@
       noInputButtons.classList.add('hidden');
       resultArea.classList.remove('hidden');
 
-      let message, colorClass, valueText;
+      let message, colorClass, valueText, copyValue;
 
       if (total < initial) {
         const diff = initial - total;
@@ -264,48 +221,71 @@
           message = TEXTS.result.ok;
           colorClass = 'text-green-600 bg-green-50';
           valueText = `$${total.toFixed(2)}`;
+          copyValue = total.toFixed(2);
         } else {
           message = TEXTS.result.bill;
           colorClass = 'text-green-600 bg-green-50';
           valueText = `$${diff.toFixed(2)}`;
+          copyValue = diff.toFixed(2);
         }
       } else if (total > initial) {
         message = TEXTS.result.refund;
         colorClass = 'text-red-600 bg-red-50';
         const diff = total - initial;
         valueText = `-$${diff.toFixed(2)}`;
+        copyValue = `-${diff.toFixed(2)}`;   // ← now keeps the minus sign
       } else {
         message = TEXTS.result.ok;
         colorClass = 'text-green-600 bg-green-50';
         valueText = `$${total.toFixed(2)}`;
+        copyValue = total.toFixed(2);
       }
 
       resultBox.className = `text-3xl font-bold py-5 ${colorClass} rounded-lg`;
       resultBox.textContent = message;
       resultValueEl.textContent = valueText;
 
-      // Vision-plan buttons – short labels only
+      // Vision-plan helper buttons – Davis left/blue, Superior right/yellow
       if (message === TEXTS.result.bill || message === TEXTS.result.refund) {
         const isBill = message === TEXTS.result.bill;
-        const bgClass = isBill
-          ? 'bg-blue-50 hover:bg-blue-100 text-blue-800 border-blue-200'
-          : 'bg-red-50 hover:bg-red-100 text-red-800 border-red-200';
 
         const helperDiv = document.createElement('div');
         helperDiv.id = 'vision-helper';
-        helperDiv.className = 'mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3';
+        helperDiv.className = 'mt-8 space-y-4';
 
-        TEXTS.categories.forEach((cat, index) => {
-          const phrase = isBill ? cat.bill : cat.refund;
-          const btn = document.createElement('button');
-          btn.className = `quick-copy px-4 py-3 rounded-lg font-medium border ${bgClass} transition flex items-center justify-between gap-2`;
-          btn.dataset.copyText = phrase;
-          btn.innerHTML = `
-            <span>${cat.label}</span>
+        // Group by category so Davis is left, Superior right
+        for (let i = 0; i < TEXTS.categories.length; i += 2) {
+          const catDavis   = TEXTS.categories[i];
+          const catSuperior = TEXTS.categories[i + 1] || catDavis;
+
+          const phraseDavis   = isBill ? catDavis.davis   : catDavis.davis;   // both cases use .davis for Davis
+          const phraseSuperior = isBill ? catSuperior.superior : catSuperior.superior;
+
+          const row = document.createElement('div');
+          row.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+
+          // Davis – left / blue
+          const btnDavis = document.createElement('button');
+          btnDavis.className = 'quick-copy px-4 py-3 rounded-lg font-medium border bg-blue-50 hover:bg-blue-100 text-blue-800 border-blue-200 transition flex items-center justify-between gap-2';
+          btnDavis.dataset.copyText = phraseDavis;
+          btnDavis.innerHTML = `
+            <span>${catDavis.label}</span>
             <i data-lucide="copy" class="h-4 w-4 flex-shrink-0"></i>
           `;
-          helperDiv.appendChild(btn);
-        });
+          row.appendChild(btnDavis);
+
+          // Superior – right / yellow
+          const btnSuperior = document.createElement('button');
+          btnSuperior.className = 'quick-copy px-4 py-3 rounded-lg font-medium border bg-yellow-50 hover:bg-yellow-100 text-yellow-800 border-yellow-200 transition flex items-center justify-between gap-2';
+          btnSuperior.dataset.copyText = phraseSuperior;
+          btnSuperior.innerHTML = `
+            <span>${catSuperior.label}</span>
+            <i data-lucide="copy" class="h-4 w-4 flex-shrink-0"></i>
+          `;
+          row.appendChild(btnSuperior);
+
+          helperDiv.appendChild(row);
+        }
 
         resultArea.appendChild(helperDiv);
         lucide.createIcons();
@@ -330,8 +310,9 @@
     });
 
     document.getElementById('btn-copy-result').onclick = () => {
-      const text = document.getElementById('result-value').textContent.replace(/[$\-]/g, '').trim();
-      navigator.clipboard.writeText(text);
+      const raw = document.getElementById('result-value').textContent;
+      const cleaned = raw.replace(/^\$/, '');  // remove leading $ but KEEP - for refunds
+      navigator.clipboard.writeText(cleaned);
     };
 
     document.getElementById('btn-clear').onclick = () => {
@@ -343,18 +324,15 @@
     };
 
     document.getElementById('btn-not-in-eob').onclick = () =>
-      navigator.clipboard.writeText(TEXTS.noInput.davisExam); // or change to whatever you prefer
+      navigator.clipboard.writeText(TEXTS.noInput.davisExam);
 
-    // Fixed buttons – use TEXTS.fixed
     document.querySelectorAll('.quick-copy:not(#vision-helper .quick-copy)').forEach(btn => {
       btn.addEventListener('click', () => {
         const text = btn.textContent.trim().replace(/ copy.*$/i, '').trim();
         let fullText = text;
-
         Object.values(TEXTS.fixed).forEach(item => {
           if (item.label === text) fullText = item.text;
         });
-
         navigator.clipboard.writeText(fullText);
       });
     });
