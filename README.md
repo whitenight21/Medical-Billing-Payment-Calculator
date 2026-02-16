@@ -2,7 +2,8 @@
 
 A simple, offline-friendly web tool designed for vision/medical billing staff (especially Davis Vision & Superior Vision claims) to quickly calculate patient responsibility vs. payments received and determine next steps (OK, Bill to Patient, or Refund).
 
-https://github.com/whitenight21/payment-balance-calculator
+[https://github.com/whitenight21/payment-balance-calculator
+](https://whitenight21.github.io/Medical-Billing-Payment-Calculator/)
 
 ## Features
 
@@ -22,7 +23,9 @@ https://github.com/whitenight21/payment-balance-calculator
 ## Demo
 
 You can try it live here:  
-→ https://whitenight21.github.io/payment-balance-calculator/  
+→ 
+[https://whitenight21.github.io/payment-balance-calculator/  
+](https://whitenight21.github.io/Medical-Billing-Payment-Calculator/)
 
 or just download `index.html` and open it in any browser.
 
