@@ -40,17 +40,3 @@ or just download `index.html` and open it in any browser.
    - **Refund** → red + negative amount
 5. Click the big result button to copy the dollar amount (with `-` sign for refunds)
 6. Use the blue/yellow buttons to copy full notes for claims/EFT comments
-
-## Customization
-
-All editable text lives in one object near the top of `index.html`:
-
-```javascript
-const TEXTS = {
-  // change labels, full copied phrases, add/remove categories here
-  categories: [
-    { label: "Davis Exam",   davis: "...", superior: "..." },
-    // ...
-  ],
-  // ...
-}
